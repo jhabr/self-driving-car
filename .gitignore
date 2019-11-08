@@ -5,3 +5,4 @@ images/drive/*
 images/train/*
 !images/drive/.gitkeep
 !images/train/.gitkeep
+artefacts/train/*.v2

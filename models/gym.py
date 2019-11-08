@@ -1,4 +1,4 @@
-from models.model import Model
+from models.brain import Brain
 from models.trainer import Trainer
 
 if __name__ == '__main__':
@@ -7,9 +7,9 @@ if __name__ == '__main__':
 
     trainer.load_data()
 
-    model = Model()
-    model.build()
+    brain = Brain()
+    brain.build()
 
-    trainer.train_model(model)
+    trainer.train_brain(brain)
 
     trainer.plot_history()

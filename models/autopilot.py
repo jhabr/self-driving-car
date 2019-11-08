@@ -3,7 +3,7 @@ import eventlet
 import eventlet.wsgi
 from flask import Flask
 from helpers.image_processor import ImageProcessor
-from models.model import Model
+from models.brain import Brain
 
 
 class AutoPilot:
@@ -11,11 +11,11 @@ class AutoPilot:
     def __init__(self):
         self.socket_io = socketio.Server()
         self.app = Flask(__name__)
-        self.model = None
+        self.brain = None
 
-    def load_model(self, path):
-        self.model = Model()
-        self.model.load(path)
+    def load_brain(self, path):
+        self.brain = Brain()
+        self.brain.load(path)
 
     def telemetry_data(self, sid, data):
         if data is None:
@@ -58,7 +58,7 @@ class AutoPilot:
 
         try:
             image = image_processor.process_image()
-            steering_angle = self.model.predict_steering_angle(image)
+            steering_angle = self.brain.predict_steering_angle(image)
             throttle = 1.0 - steering_angle ** 2 - speed ** 2
 
             print("steering angle: {}, throttle: {}, speed: {}".format(steering_angle, throttle, speed))

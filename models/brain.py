@@ -1,10 +1,13 @@
-from keras.callbacks import ModelCheckpoint
+import os
+from keras.callbacks import ModelCheckpoint, TensorBoard
 from keras.optimizers import Adam
 from keras.models import Sequential, load_model
 from keras.layers import Lambda, Conv2D, Dropout, Flatten, Dense
 
 
-class Model:
+class Brain:
+
+    ARTEFACTS_DIR = os.path.join(os.getcwd(), '..', 'artefacts')
 
     def __init__(self):
         self.model = None
@@ -44,6 +47,11 @@ class Model:
             mode='auto'
         )
 
+        tensorboard = TensorBoard(
+            log_dir=Brain.ARTEFACTS_DIR,
+            histogram_freq=1
+        )
+
         self.model.compile(
             loss='mean_squared_error',
             optimizer=Adam(lr=0.0001),
@@ -56,9 +64,21 @@ class Model:
             epochs=40,
             validation_data=validation_generator,
             validation_steps=validation_steps,
-            callbacks=[checkpoint],
+            callbacks=[checkpoint, tensorboard],
             verbose=2
         )
+
+        # self.model.fit(
+        #     x=X_train,
+        #     y=y_train,
+        #     batch_size=32,
+        #     epochs=steps,
+        #     validation_data=(X_valid, y_valid),
+        #     validation_steps=validation_steps,
+        #     callbacks=[checkpoint, tensorboard],
+        #     shuffle=True,
+        #     verbose=2
+        # )
 
     def predict_steering_angle(self, image):
         return float(self.model.predict(image, batch_size=1))

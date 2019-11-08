@@ -31,14 +31,19 @@ class Trainer:
 
         self.X_train, self.X_valid, self.y_train, self.y_valid = train_test_split(X, y, test_size=0.2, random_state=0)
 
-    def train_model(self, model):
+    def train_brain(self, brain):
         train_generator = self.generator('training')
         validation_generator = self.generator('validation')
-        self.history = model.train(train_generator, len(self.X_train), validation_generator, len(self.X_valid))
+        self.history = brain.train(
+            train_generator,
+            len(self.X_train),
+            validation_generator,
+            len(self.X_valid)
+        )
 
     def generator(self, subset):
         train_datagen = ImageDataGenerator(
-            rescale=1. / 255,
+            rescale=1./255,
             validation_split=0.2,
             rotation_range=40,
             width_shift_range=0.2,
@@ -50,7 +55,7 @@ class Trainer:
             fill_mode='constant')
 
         return train_datagen.flow_from_dataframe(
-            dataframe=self.dataframe,
+            dataframe=self.data_frame,
             directory=Trainer.TRAIN_DIR,
             x_col='center-image',
             y_col='steering',
